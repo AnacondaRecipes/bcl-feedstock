@@ -1,0 +1,57 @@
+{% set name = "bcl" %}
+{% set version = "2.3.1" %}
+
+package:
+  name: {{ name|lower }}
+  version: {{ version }}
+
+source:
+  url: https://pypi.io/packages/source/{{ name[0] }}/{{ name }}/bcl-{{ version }}.tar.gz
+  sha256: 2a10f1e4fde1c146594fe835f29c9c9753a9f1c449617578c1473d6371da9853
+  patches:
+    - patches/0001-dont-build-libsodium.patch
+
+build:
+  number: 0
+  script: {{ PYTHON }} -m pip install . -vv --no-build-isolation --no-deps
+
+requirements:
+  build:
+    - {{ compiler('c') }}
+    - patch  # [not win]
+    - m2-patch  # [win]
+  host:
+    - python
+    - setuptools >=62.0
+    - pip
+    - wheel
+    - libsodium 1.0.18
+    - cffi 1.16
+  run:
+    - python
+    - cffi
+    - libsodium  # pin through run_exports
+
+test:
+  imports:
+    - bcl
+  commands:
+    - pip check
+    - python -c "from bcl import symmetric; s = symmetric.secret(); c = symmetric.encrypt(s, 'abc'.encode()); symmetric.decrypt(s, c).decode('utf-8') == 'abc'"
+  requires:
+    - pip
+    - python
+
+about:
+  home: https://github.com/nthparty/bcl
+  summary: Python library that provides a simple interface for symmetric (i.e., secret-key) and asymmetric (i.e., public-key) encryption/decryption primitives.
+  description: Python library that provides a simple interface for symmetric (i.e., secret-key) and asymmetric (i.e., public-key) encryption/decryption primitives.
+  license: MIT
+  license_family: MIT
+  license_file: LICENSE
+  dev_url: https://github.com/nthparty/bcl
+  doc_url: https://bcl.readthedocs.io
+
+extra:
+  recipe-maintainers:
+    - JeanChristopheMorinPerso

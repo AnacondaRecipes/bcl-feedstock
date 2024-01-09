@@ -1,0 +1,20 @@
+diff --git a/setup.py.orig b/setup.py
+index 3752cc7e..5c17c80a 100644
+--- a/setup.py
++++ b/setup.py
+@@ -217,10 +217,10 @@ setup(
+     long_description=long_description,
+     long_description_content_type='text/x-rst',
+     cffi_modules=['src/bcl/sodium_ffi.py:sodium_ffi'],
+-    cmdclass={
+-        'build_clib': build_clib,
+-        'build_ext': build_ext,
+-    },
+-    distclass=Distribution,
++    # cmdclass={^M
++    #     'build_clib': build_clib,^M
++    #     'build_ext': build_ext,^M
++    # },^M
++    # distclass=Distribution,^M
+     zip_safe=False
+ )
